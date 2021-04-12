@@ -38,7 +38,7 @@ def demand_scaling(g_d, F):
         f_var["g_d"][country] = pd.DataFrame\
                                 (1, index=np.arange(df.shape[0]), columns=g_d_columns)
         f_var["g_d"][country]["demand"] = df["gamma"]
-        f_var["g_d"][country].to_csv("../output/debugging/factorial_approach/" + "demand_scaling_" + country + ".csv")
+        #f_var["g_d"][country].to_csv("../output/debugging/factorial_approach/" + "demand_scaling_" + country + ".csv")
     a_var["F"] = pd.DataFrame(0, index=np.arange(F.shape[0]), columns=F.columns)
     f_var["F"] = pd.DataFrame(1, index=np.arange(F.shape[0]), columns=F.columns)
     # Print runtime
@@ -163,7 +163,7 @@ def additive_approach(g_d, F):
         f_var["g_d"][n] = pd.DataFrame\
                                 (1, index=np.arange(df.shape[0]), columns=g_d[n].columns)
         a_var["g_d"][n].columns = p_index[n]
-        a_var["g_d"][n].to_csv("../output/debugging/factorial_approach/" + "a_var_" + n + ".csv")
+        #a_var["g_d"][n].to_csv("../output/debugging/factorial_approach/" + "a_var_" + n + ".csv")
     #delta_F    
     table = []
     for t in t_index:
@@ -173,7 +173,7 @@ def additive_approach(g_d, F):
         table.append(row)
     a_var["F"] = pd.DataFrame.from_records(table)
     a_var["F"].columns = f_index
-    a_var["F"].to_csv("../output/debugging/factorial_approach/a_var_F.csv")
+    #a_var["F"].to_csv("../output/debugging/factorial_approach/a_var_F.csv")
     f_var["F"] = pd.DataFrame(1, index=np.arange(F.shape[0]), columns=F.columns)
     end = time()
     print("Runtime:", end - start)
@@ -270,6 +270,7 @@ def factorial_approach(g_d, F):
 
         
 # Internal sigma approach (SIGI)
+# Credits go to Chalendar
 def internal_sigma_approach(g_d, F, A=100, eta=0.1):
     # Measure the runtime
     start = time()
@@ -349,9 +350,9 @@ def internal_sigma_approach(g_d, F, A=100, eta=0.1):
         a_var["g_d"][n].columns = p_index[n]
         f_var["g_d"][n] = pd.DataFrame\
                                 (1, index=np.arange(df.shape[0]), columns=g_d[n].columns)
-        if not os.path.exists("../output/debugging/factorial_approach/"):
-            os.makedirs("../output/debugging/factorial_approach/")
-        f_var["g_d"][n].to_csv("../output/debugging/factorial_approach/" + "internal_sigma_f_var" + n + ".csv")
+       # if not os.path.exists("../output/debugging/factorial_approach/"):
+        #    os.makedirs("../output/debugging/factorial_approach/")
+        #f_var["g_d"][n].to_csv("../output/debugging/factorial_approach/" + "internal_sigma_f_var" + n + ".csv")
     #delta_F    
     table = []
     for t in t_index:
@@ -361,7 +362,7 @@ def internal_sigma_approach(g_d, F, A=100, eta=0.1):
         table.append(row)
     a_var["F"] = pd.DataFrame.from_records(table)
     a_var["F"].columns = f_index
-    a_var["F"].to_csv("../output/debugging/factorial_approach/internal_sigma_f_var_F.csv")
+    #a_var["F"].to_csv("../output/debugging/factorial_approach/internal_sigma_f_var_F.csv")
     f_var["F"] = pd.DataFrame(1, index=np.arange(F.shape[0]), columns=F.columns)
     end = time()
     print("Runtime:", end - start)

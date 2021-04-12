@@ -23,7 +23,9 @@ g_d_original = copy.deepcopy(g_d)
 F_original = copy.deepcopy(F)
 
 # STEP 2 Apply correction method
-a_var, f_var = cm.case_approach(g_d, F)
+a_var, f_var = cm.internal_sigma_approach(g_d, F)
+print("success")
+sys.exit()
 
 # STEP 3 Create reconciled data set from raw data and correction factors
 g_d_clean, F_clean = aux.make_clean(g_d_original, F_original, a_var, f_var)

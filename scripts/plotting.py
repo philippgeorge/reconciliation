@@ -53,43 +53,44 @@ def plot_raw_cleaned_aggregated(correction_method, country):
 
 # Plot relative mismatch
 def plot_rel_mismatch(g_d, F):
-    rel_error = {}
-    abs_error = {}
-    sum_generation = {}
-    sum_load = {}
-    sum_import = {}
-    sum_export = {}
-    rel_extra_generation = {}
-    rel_extra_load = {}
-    average_mismatch_in_percent = {}
-    total = {}
+    mu_rel = {}
+    sum_exp = {}
+    mis_abs_tot = {}
     
     print("Plotting energy balance per country. Positive values in import/export indicate imports")
     # For every country add a column "Error" = Generation + Import - Load - Export
-    for country, df in g_d.items():  
+    for country, df in g_d.items():
+       
         all_cols = g_d[country].columns.values
         # Get generation columns
         g_cols = [col for col in all_cols if "demand" not in col]
         l_cols = [col for col in all_cols if "demand" in col]
         i_cols = [x for x in F.columns.values if country in x[-2:]]  
-        e_cols = [x for x in F.columns.values if country in x[:2]]  
+        e_cols = [x for x in F.columns.values if country in x[:2]]
+        
         df = df[g_cols].join(  F[i_cols]).join(  df[l_cols]).join(F[e_cols])
         df["mismatch"] = df[g_cols].sum(axis=1) + df[i_cols].sum(axis=1) - df["demand"] - df[e_cols].sum(axis=1)
-        df["mismatch_in_percent"] = abs(df["mismatch"] / (df["demand"] + df[e_cols].sum(axis=1)))
-        df.to_csv("../output/debugging/complete_energy_balance/" + country + ".csv")
-        average_mismatch_in_percent[country] = df["mismatch_in_percent"].sum(axis=0) / 8760
         df["mismatch_absolute"] = df["mismatch"].abs()
-        total[country] = df["mismatch_absolute"].sum(axis=0) / 1000000
-    
+        
+        #df["mismatch_in_percent"] = abs(df["mismatch"] / (df["demand"] + df[e_cols].sum(axis=1)))
+        df.to_csv("../output/debugging/" + country + ".csv")
+        #average_mismatch_in_percent[country] = df["mismatch_in_percent"].sum(axis=0) / 8760
+
+        #total[country] = df["mismatch_absolute"].sum(axis=0) / 1000000
+        mu_rel[country] = df["mismatch_absolute"].sum(axis=0) / (df["demand"].sum(axis=0) + sum(df[e_cols].sum(axis=0)))
+        sum_exp[country] = df[e_cols].sum(axis=0)
+        mis_abs_tot[country] = df["mismatch_absolute"].sum(axis=0) 
+
+    return mu_rel
     # Plot relative mismatch
-    temp = dict(sorted(average_mismatch_in_percent.items(), key=lambda item: item[1], reverse=True))
+    temp = dict(sorted(mu_rel.items(), key=lambda item: item[1], reverse=True))
     fig = plt.figure()
     x = [k for k, v in temp.items()]
     #x = x[10:-2]
     y = [v for k, v in temp.items()]
     #y = y[10:-2]
     ax = fig.add_axes([0, 0, 1, 1])
-    ax.set_title("Average relative mismatch")
+    ax.set_title("Relative mismatch")
     ax.bar(x, y)
 
 # Plot yearly production values by different methods
@@ -120,12 +121,13 @@ def plot_yearly_production_multiple(set0, set1, set2, set3, set4, set5):
         ax = fig.add_axes([0, 0, 1, 1])
         ax.set_title("Yearly values " + country)
         w = 1.0/(len(x) + 4)
-        ax.bar(_x + 0 * w, y_0, color = "b", width=w)
-        ax.bar(_x + 1 * w, y_1, color = "g", width=w)
-        ax.bar(_x + 2 * w, y_2, color = "r", width=w)
-        ax.bar(_x + 3 * w, y_3, color = "c", width=w)
-        ax.bar(_x + 4 * w, y_4, color = "m", width=w)
-        ax.bar(_x + 5 * w, y_5, color = "y", width=w)
+        ax.bar(_x + 0 * w, y_0, color = "b", width=w, label="DEM")
+        ax.bar(_x + 1 * w, y_1, color = "g", width=w, label="CAS")
+        ax.bar(_x + 2 * w, y_2, color = "r", width=w, label="ADD")
+        ax.bar(_x + 3 * w, y_3, color = "c", width=w, label="FAC")
+        ax.bar(_x + 4 * w, y_4, color = "m", width=w, label="SIGI")
+        ax.bar(_x + 5 * w, y_5, color = "y", width=w, label="SIGE")
+        plt.legend(loc="upper right")
         plt.xticks(_x, x)
         plt.xticks(rotation=70)
         ax.set_ylabel("MW")
@@ -138,5 +140,5 @@ def horizontal_bar_plot(x, y) :
     ax.set_yticks(y_pos)
     ax.set_yticklabels(x)
     ax.invert_yaxis()  # labels read top-to-bottom
-    ax.set_xlabel("Relative distance")
-    ax.set_title("Distance to targets")    
+    ax.set_xlabel("Runtime in seconds")
+    ax.set_title("")    

@@ -98,7 +98,7 @@ for country, v in imp_share_order.items():
     delta_imp[country] = max(v) - min(v)
     
 # Sort from smallest to biggest delta_imp
-delta_imp_order = {k: v for k, v in sorted(delta_imp.items(), key=lambda item: item[1])}
+delta_imp_order = {k: v for k, v in sorted(delta_imp.items(), key=lambda item: item[1], reverse=True)}
 delta_imp_average = sum(delta_imp.values()) / len(delta_imp)
 
 
@@ -123,7 +123,7 @@ for country, v in exp_share_order.items():
     delta_exp[country] = max(v) - min(v)
     
 # Sort from smallest to biggest delta_exp
-delta_exp_order = {k: v for k, v in sorted(delta_exp.items(), key=lambda item: item[1])}
+delta_exp_order = {k: v for k, v in sorted(delta_exp.items(), key=lambda item: item[1], reverse=True)}
 delta_exp_average = sum(delta_exp.values()) / len(delta_exp)
      
 

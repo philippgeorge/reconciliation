@@ -77,4 +77,12 @@ index = {}
 for method, value in difference.items():
     index[method] = value / base_value
 
+# STEP 4 Plotting
+index = {k: v for k, v in sorted(index.items(), key=lambda item: item[1], reverse=True)}
+# Plot as horizontal bars
+x = list(index.keys())
+y = list(index.values())
+plot.horizontal_bar_plot(x, y)
+    
+
 

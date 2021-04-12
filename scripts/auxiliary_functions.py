@@ -831,6 +831,16 @@ F_specific = {
                 "GB -> NL": 6.93,
                 }
 
+# Runtimes for reconciliation methods on full data set
+runtimes = {
+            "DEM": 0.33,
+            "CAS": 0.72,
+            "ADD": 439.90,
+            "FAC": 421.16,
+            "SIGI": 1485.67,
+            "SIGE": 612.94
+            }
+
 
 def load_data(path_g, path_d, path_F, country_balance=False, subset=False):
     """
@@ -869,7 +879,7 @@ def load_data(path_g, path_d, path_F, country_balance=False, subset=False):
     # Rename columns <country_productiontype>
     new_names = [x[:2] + "_" + df_g[x][0] for x in df_g.columns]
     df_g.columns = new_names
-    # Remove the first 5 rows
+    # Remove the first 2 rows
     df_g = df_g.iloc[2:]
     # Replace np.nan with zeros
     df_g = df_g.fillna(0)

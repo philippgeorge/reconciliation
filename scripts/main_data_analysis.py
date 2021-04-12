@@ -1,4 +1,5 @@
 # Leading Question:
+# What is the relative mismatch per country?
 # Are there more time steps where generation side is bigger thand demand side?
 import pandas as pd
 import numpy as np
@@ -20,12 +21,29 @@ import matplotlib.pyplot as plt
 path_g = "../input/official_data/generation_new_filled.csv"
 path_d = "../input/official_data/demand.csv"
 path_F = "../input/official_data/crossborder.csv"
+path_F_unfiltered = "/Users/pg/entso-e_cross-border_data/output/cross_border_flow/cross_border_flow_data_hourly.csv"
 path_g_d_com = "../output/attacking_vector/complete_set/g_d/"
 path_g_d_att = "../output/attacking_vector/attacked_set/g_d/"
 path_F_com = "../output/attacking_vector/complete_set/F.csv"
 path_F_att =  "../output/attacking_vector/attacked_set/F.csv"
-# Paths to clean sets
 
+
+# By how much the quality filtering reduces the amount of links?
+
+
+# Load data
+g_d, _ = aux.load_data(path_g, path_d, path_F, subset=False)
+
+# Load F
+F = pd.read_csv(path_F)
+
+# Load unfiltered F
+F_unfiltered = pd.read_csv(path_F_unfiltered)
+print("Success")
+sys.exit()
+
+# Calculate and visualize the average relative mismatch
+rel = plot.plot_rel_mismatch(g_d, F)
 
 # Complete data frames include slack variables that can be used as indicator
 # number of zeros of s_r indicates that generation side is smaller

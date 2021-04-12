@@ -53,8 +53,8 @@ for method, v in clean_set.items():
     number[method] = {}
     for country, df in g_d.items():
         # Drop 'mismatch' from table scheme
-        country_balances[country] = country_balances[country][[x for x in country_balances[country].columns if "->"  in x]]
-        clean_set[method][country] = clean_set[method][country][[x for x in clean_set[method][country].columns if "->"  in x]]
+        country_balances[country] = country_balances[country][[x for x in country_balances[country].columns if "mismatch"  not in x]]
+        clean_set[method][country] = clean_set[method][country][[x for x in clean_set[method][country].columns if "mismatch" not  in x]]
 
         a = country_balances[country].columns.values
         #clean_set["SIGI"][country] = clean_set["SIGI"][country][[x for x in clean_set["SIGI"][country].columns if "mismatch" not in x]]
@@ -62,18 +62,26 @@ for method, v in clean_set.items():
         
         bool_df = abs(country_balances[country] - clean_set[method][country]) > 1
         report[country] = bool_df
-        number[method][country] = bool_df.sum()
-
+        #number[method][country] = bool_df.sum()
+        a = len(bool_df.sum()) * 8760
+        b = sum(bool_df.sum())
+        number[method][country] = b / a
         # Number of values per country
-        total_number = 8760 * len(country_balances[country].columns)
-        if total_number == 0:
-            continue
-        affection =  2*(sum(number[method][country]) / total_number)
-        print(method, country)
-        print(affection)
-        print()
+        #total_number = 8760 * len(country_balances[country].columns)
+        #if total_number == 0:
+         #   continue
+        #affection =  1*(sum(number[method][country]) / total_number)
+        #print(method, country)
+        #print(affection)
+        #print()
         #number.append(df.sum())
 
 
-
+average = {}
+for method, d in number.items():
+    average[method] = 0
+    print(method, d)
+    for country, value in d.items():
+        average[method] += value / len(d)
+    
 

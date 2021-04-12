@@ -280,6 +280,7 @@ def factorial_approach(g_d, F):
 
         
 # Internal sigma approach (SIGI)
+# Credits go to Chalendar
 def internal_sigma_approach(g_d, F, A=100, eta=0.1):
     # Measure the runtime
     start = time()
